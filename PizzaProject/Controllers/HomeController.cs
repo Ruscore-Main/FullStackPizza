@@ -134,7 +134,6 @@ namespace PizzaProject.Controllers
 
         // DELETE api/pizza
         // Удаление товара
-        [HttpPost]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Pizza>> Delete(int id)
         {
