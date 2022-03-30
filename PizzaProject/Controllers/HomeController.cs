@@ -38,9 +38,9 @@ namespace PizzaProject.Controllers
         // GET api/pizza
         // Получение списка товаров
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JsonResult>>> Get()
+        public async Task<ActionResult<IEnumerable<JsonResult>>> Get(string category, string _sort)
         {
-            List<PizzaJson> result = new List<PizzaJson>();
+            List<PizzaJson> pizzas = new List<PizzaJson>();
             List<Image> images = await _db.Image.ToListAsync();
 
             await _db.Pizza.ForEachAsync(pizza =>
@@ -60,8 +60,46 @@ namespace PizzaProject.Controllers
                         curPizza.imageUrls.Add(img.ImageUrl);
                     }
                 }
-                result.Add(curPizza);
+                pizzas.Add(curPizza);
             });
+
+            // Если нет никаких параметров запроса, то сразу возвращаем результат, чтобы ускорить процесс
+            if (category == null && _sort == null)
+            {
+                return new JsonResult(pizzas);
+            }
+
+            var result = from s in pizzas select s;
+
+            if (category != null)
+            {
+                result = result.Where(el => Convert.ToString(el.category) == category);
+
+            }
+
+            if (_sort != null)
+            {
+                switch (_sort)
+                {
+                    case "popular":
+                        {
+                            result = result.OrderBy(el => el.rating);
+                            break;
+                        }
+
+                    case "price":
+                        {
+                            result = result.OrderBy(el => el.price);
+                            break;
+                        }
+                    case "name":
+                        {
+                            result = result.OrderBy(el => el.name);
+                            break;
+                        }
+                }
+            }
+
 
             return new JsonResult(result);
         }
