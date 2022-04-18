@@ -1,6 +1,6 @@
 import "./index.scss";
 
-import { Home, Basket } from "./pages";
+import { Home, Basket, Admin } from "./pages";
 import { Route } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -14,6 +14,7 @@ const App = () => {
       <div className="content">
         <Route exact path="/" render={() => <Home />} />
         <Route exact path="/basket" render={() => <Basket />} />
+        <Route exact path="/admin" render={() => <Admin />} />
       </div>
     </div>
   );

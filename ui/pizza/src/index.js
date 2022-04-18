@@ -4,6 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
+import './scss/bootsrap.scss';
 import './scss/app.scss';
 
 import App from './App';

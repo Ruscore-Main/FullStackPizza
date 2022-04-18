@@ -5500,19 +5500,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\oobit\\.nuget\\packages\\": {}
+    "C:\\Users\\Ruslan\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\oobit\\source\\repos\\PizzaProject\\PizzaProject\\PizzaProject.csproj",
+      "projectUniqueName": "D:\\3 курс 2 семестр\\FullStackPizza\\FullStackPizza\\PizzaProject\\PizzaProject.csproj",
       "projectName": "PizzaProject",
-      "projectPath": "C:\\Users\\oobit\\source\\repos\\PizzaProject\\PizzaProject\\PizzaProject.csproj",
-      "packagesPath": "C:\\Users\\oobit\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\oobit\\source\\repos\\PizzaProject\\PizzaProject\\obj\\",
+      "projectPath": "D:\\3 курс 2 семестр\\FullStackPizza\\FullStackPizza\\PizzaProject\\PizzaProject.csproj",
+      "packagesPath": "C:\\Users\\Ruslan\\.nuget\\packages\\",
+      "outputPath": "D:\\3 курс 2 семестр\\FullStackPizza\\FullStackPizza\\PizzaProject\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\oobit\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Ruslan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5571,7 +5571,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

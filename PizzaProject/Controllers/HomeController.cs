@@ -23,7 +23,7 @@ namespace PizzaProject.Controllers
     }
 
 
-    [Route("api/home")]
+    [Route("api/pizza")]
     [ApiController]
     public class HomeController : Controller
     {

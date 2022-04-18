@@ -1,24 +1,37 @@
-import React from 'react'
+import { AddNewPizza, TablePizza } from './../components';
+import React from 'react';
+import { fetchPizzas } from '../redux/actions/pizzas';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Admin = () => {
-    return (
-        <div className="container">
-          <div className="content__top">
-            <Categories
-              onClickItem={onSelectCategory}
-              items={categoryNames}
-              activeCategory={category}
-            />
-            <SortPopup items={sortTypes} currentSort={sortBy} />
-          </div>
-          <h2 className="content__title">Все пиццы</h2>
-          <div className="content__items">
-            {isLoaded
-              ? pizzas.map((pizza) => <PizzaCard onClickAddPizza={handleAddPizzaToCart} {...pizza} key={pizza.id} />)
-              : Array.from(Array(10), (_, index) => <LoaderPizzaBlock key={index} />)}
-          </div>
-        </div>
-      );
-}
 
-export default Admin
+  const {items, isLoaded} = useSelector(({ pizzas }) => ({
+    items: pizzas.items,
+    isLoaded: pizzas.isLoaded
+  }));
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(fetchPizzas('popular', null));
+  }, []);
+
+
+
+  return (
+    <div className="container">
+      <h2 className="content__title">Панель администрации</h2>
+      <div className="admin__wrapper">
+        <AddNewPizza />
+        
+        {
+          isLoaded ?
+          <TablePizza items={items}/>
+          : "Идет загрузка"
+        }
+      </div>
+    </div>
+  );
+};
+
+export default Admin;
