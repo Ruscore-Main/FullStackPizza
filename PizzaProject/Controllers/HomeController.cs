@@ -14,19 +14,20 @@ namespace PizzaProject.Controllers
     {
         public int id;
         public string name;
-        public short price;
-        public short category;
-        public short rating;
-        public List<int> types;
-        public List<int> sizes;
+        public int price;
+        public int category;
+        public int rating;
+        public List<int> types = new List<int>();
+        public List<int> sizes = new List<int>();
         public List<string> imageUrls = new List<string>();
     }
 
 
-    [Route("api/pizza")]
+    [Route("api/home")]
     [ApiController]
     public class HomeController : Controller
     {
+
         private PizzaContext? _db;
 
         public HomeController(PizzaContext pizzaContext)
@@ -41,9 +42,10 @@ namespace PizzaProject.Controllers
         public async Task<ActionResult<IEnumerable<JsonResult>>> Get(string category, string _sort)
         {
             List<PizzaJson> pizzas = new List<PizzaJson>();
-            List<Image> images = await _db.Image.ToListAsync();
-
-            await _db.Pizza.ForEachAsync(pizza =>
+            List<PizzaImage> images = await _db.PizzaImages.ToListAsync();
+            List<Models.Type> allTypes = await _db.Types.ToListAsync();
+            List<Pizza_Type> pts = await _db.Pizza_Types.ToListAsync();
+            await _db.Pizzas.ForEachAsync(pizza =>
             {
                 PizzaJson curPizza = new PizzaJson();
                 curPizza.id = pizza.Id;
@@ -51,13 +53,20 @@ namespace PizzaProject.Controllers
                 curPizza.price = pizza.Price;
                 curPizza.category = pizza.Category;
                 curPizza.rating = pizza.Rating;
-                curPizza.types = pizza.Types.Split(",").Select(el => Convert.ToInt32(el)).ToList();
-                curPizza.sizes = pizza.Sizes.Split(",").Select(el => Convert.ToInt32(el)).ToList();
-                foreach (Image img in images)
+
+                foreach (Pizza_Type pt in pts)
+                {
+                    if (pt.PizzaId == pizza.Id)
+                    {
+                        curPizza.types.Add(pt.Type.TypeValue);
+                    }
+                }
+                foreach (PizzaImage img in images)
                 {
                     if (img.PizzaId == pizza.Id)
                     {
                         curPizza.imageUrls.Add(img.ImageUrl);
+                        curPizza.sizes.Add(img.Size);
                     }
                 }
                 pizzas.Add(curPizza);
@@ -104,7 +113,6 @@ namespace PizzaProject.Controllers
             return new JsonResult(result);
         }
 
-
         // POST api/pizza
         // Создание товара
         [HttpPost]
@@ -114,27 +122,40 @@ namespace PizzaProject.Controllers
             {
                 return BadRequest();
             }
+
+            List<Models.Type> allTypes = await _db.Types.ToListAsync();
+
             Pizza newPizza = new Pizza();
             newPizza.Name = pizza.name;
             newPizza.Price = pizza.price;
             newPizza.Rating = pizza.rating;
             newPizza.Category = pizza.category;
-            newPizza.Types = string.Join(",", pizza.types);
-            newPizza.Sizes = string.Join(",", pizza.sizes);
 
-            await _db.Pizza.AddAsync(newPizza);
 
-            foreach (string url in pizza.imageUrls)
+
+            for (int i = 0; i < pizza.imageUrls.Count; i++)
             {
-                Image img = new Image();
-                img.ImageUrl = url;
-                img.PizzaId = newPizza.Id;
+                PizzaImage pizzaImage = new PizzaImage()
+                {
+                    ImageUrl = pizza.imageUrls[i],
+                    Size = pizza.sizes[i],
+                };
 
-                await _db.Image.AddAsync(img);
-
-                newPizza.Image.Add(img);
+                newPizza.Images.Add(pizzaImage);
             }
 
+            foreach (int i in pizza.types)
+            {
+                Pizza_Type pt = new Pizza_Type()
+                {
+                    PizzaId = pizza.id,
+                    Type = allTypes.FirstOrDefault(el => el.TypeValue == i)
+                };
+
+                newPizza.Pizza_Types.Add(pt);
+            }
+
+            await _db.Pizzas.AddAsync(newPizza);
             await _db.SaveChangesAsync();
 
             return Ok(newPizza);
@@ -151,7 +172,7 @@ namespace PizzaProject.Controllers
                 return BadRequest();
             }
 
-            Pizza foundPizza = await _db.Pizza.FirstOrDefaultAsync(el => el.Id == pizza.id);
+            Pizza foundPizza = await _db.Pizzas.FirstOrDefaultAsync(el => el.Id == pizza.id);
 
             if (foundPizza == null)
             {
@@ -162,8 +183,6 @@ namespace PizzaProject.Controllers
             foundPizza.Price = pizza.price;
             foundPizza.Rating = pizza.rating;
             foundPizza.Category = pizza.category;
-            foundPizza.Types = string.Join(",", pizza.types);
-            foundPizza.Sizes = string.Join(",", pizza.sizes);
 
             await _db.SaveChangesAsync();
             return Ok(pizza);
@@ -175,14 +194,14 @@ namespace PizzaProject.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Pizza>> Delete(int id)
         {
-            Pizza pizza = _db.Pizza.FirstOrDefault(el => el.Id == id);
+            Pizza pizza = _db.Pizzas.FirstOrDefault(el => el.Id == id);
 
             if (pizza == null)
             {
                 return NotFound();
             }
 
-            _db.Pizza.Remove(pizza);
+            _db.Pizzas.Remove(pizza);
             await _db.SaveChangesAsync();
             return Ok(pizza);
         }
