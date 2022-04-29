@@ -13,3 +13,10 @@ export const fetchPizzas = (sortBy, category) => (dispatch) => {
     pizzasAPI.getPizzasByParams(sortBy, category).then((pizzas) => dispatch(setPizzas(pizzas)));
   }
 };
+
+export const addNewPizza = payload => dispatch => {
+  dispatch(setLoaded(false));
+  pizzasAPI.addNewPizza(payload).then(
+    fetchPizzas(null, null)
+  );
+}

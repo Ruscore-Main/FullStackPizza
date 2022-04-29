@@ -7,7 +7,7 @@ import Button from './Button';
 import { useSelector } from 'react-redux';
 import ImageLoader from './../assets/img/pizzaLogo.svg';
 
-const PizzaCard = ({ id, imageUrls, name, price, sizes, types, onClickAddPizza }) => {
+const PizzaCard = ({ id, imageUrls, name, price, sizes, types, onClickAddPizza, isPreview }) => {
   const availableTypes = ['тонкое', 'традиционное'];
   const availableSizes = [26, 30, 40];
   const [activeType, setActiveType] = React.useState(types[0]);
@@ -77,7 +77,7 @@ const PizzaCard = ({ id, imageUrls, name, price, sizes, types, onClickAddPizza }
       </div>
       <div className="pizza-block__bottom">
         <div className="pizza-block__price">от {price} ₽</div>
-        <Button onClick={onAddPizza} outline className="button--add">
+        <Button onClick={onAddPizza} outline className={classNames("button--add", {disabled: isPreview})}>
           <svg
             width="12"
             height="12"
@@ -97,6 +97,16 @@ const PizzaCard = ({ id, imageUrls, name, price, sizes, types, onClickAddPizza }
   );
 };
 
+PizzaCard.defaulProps = {
+  id: 0,
+  name: '-----',
+  price: 0,
+  onClickAddPizza: ()=>{},
+  sizes: [],
+  types: [],
+  imageUrls: [],
+};
+
 PizzaCard.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
@@ -107,11 +117,5 @@ PizzaCard.propTypes = {
   onClickAddPizza: PropTypes.func.isRequired,
 };
 
-PizzaCard.defaulProps = {
-  name: '-----',
-  sizes: [],
-  types: [],
-  imageUrls: [],
-};
 
 export default PizzaCard;

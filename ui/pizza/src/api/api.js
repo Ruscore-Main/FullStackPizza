@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "/api/pizza";
+const BASE_URL = "http://localhost:50111/api/pizza";
 
 export const instance = axios.create({
   baseURL: BASE_URL,
@@ -14,5 +14,9 @@ export const pizzasAPI = {
   // Возвращает массив пицц по параметрам
   getPizzasByParams(sortBy, category) {
     return instance.get(`?${category !== null ? `category=${category}&` : ''}_sort=${sortBy}&_order=asc`).then((resp) => resp.data);
+  },
+
+  addNewPizza(pizza) {
+    return instance.post(pizza)
   }
 };

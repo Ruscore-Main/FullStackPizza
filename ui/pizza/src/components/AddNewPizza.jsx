@@ -2,12 +2,14 @@ import React from 'react';
 import Button from './Button';
 import { Modal } from 'react-bootstrap';
 import AddForm from './AddForm';
+import { useDispatch } from 'react-redux';
 
 const AddNewPizza = () => {
   const [show, setShow] = React.useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const dispatch = useDispatch()
 
   return (
     <>
@@ -19,14 +21,13 @@ const AddNewPizza = () => {
         show={show}
         onHide={handleClose}
         backdrop="static"
-        keyboard={false}
-      >
+        keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Добавление товара</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <AddForm />
+          <AddForm dispatch={dispatch}/>
         </Modal.Body>
       </Modal>
     </>

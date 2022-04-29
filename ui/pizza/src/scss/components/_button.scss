@@ -17,6 +17,11 @@
     color: #fff;
   }
 
+  &.disabled {
+    opacity: .4;
+    pointer-events: none;
+  }
+
   i,
   span,
   path,
