@@ -22,11 +22,11 @@ const Admin = () => {
     <div className="container">
       <h2 className="content__title">Панель администрации</h2>
       <div className="admin__wrapper">
-        <AddNewPizza />
+        <AddNewPizza dispatch={dispatch}/>
         
         {
           isLoaded ?
-          <TablePizza items={items}/>
+          <TablePizza items={items} dispatch={dispatch}/>
           : "Идет загрузка"
         }
       </div>

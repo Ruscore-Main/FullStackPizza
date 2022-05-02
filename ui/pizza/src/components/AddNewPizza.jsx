@@ -4,12 +4,11 @@ import { Modal } from 'react-bootstrap';
 import AddForm from './AddForm';
 import { useDispatch } from 'react-redux';
 
-const AddNewPizza = () => {
+const AddNewPizza = ({dispatch}) => {
   const [show, setShow] = React.useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const dispatch = useDispatch()
 
   return (
     <>

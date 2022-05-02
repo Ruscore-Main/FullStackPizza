@@ -5,27 +5,42 @@ import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 import PizzaCard from "./PizzaCard";
 import { Button as SaveButton } from "../components";
-import { addNewPizza } from "../redux/actions/pizzas";
+import { updatePizza } from "../redux/actions/pizzas";
 
-class AddForm extends React.Component {
-  state = {
-    name: "",
-    price: "",
-    rating: 5,
-    images: {
-      26: "",
-      30: "",
-      40: "",
-    },
-    types: [],
+class EditPizzaForm extends React.Component {
+  // Первоначальная инициализация
+  constructor(props) {
+    super(props);
 
-    have26: false,
-    have30: false,
-    have40: false,
-  };
+    const { id, name, rating, imageUrls, sizes, types, price } = props.pizza;
+
+    this.state = {
+      id,
+      name,
+      rating,
+      types,
+      price,
+
+      images: {
+        26: "",
+        30: "",
+        40: "",
+      },
+
+      have26: sizes.includes(26),
+      have30: sizes.includes(30),
+      have40: sizes.includes(40),
+    };
+
+    sizes.forEach((el, i) => {
+      this.state.images[el] = imageUrls[i];
+    });
+
+    console.log(this.state);
+  }
 
   componentDidUpdate() {
-    console.log(this.state);
+    console.log('Компонент обновлен - ', this.state);
   }
 
   onNameChange = (e) => {
@@ -76,8 +91,9 @@ class AddForm extends React.Component {
   };
 
   getPizzaState = () => {
-    let { name, price, rating, types, images } = this.state;
+    let { name, price, rating, types, images, id } = this.state;
     let previewState = {
+      id,
       name,
       price,
       rating,
@@ -99,7 +115,13 @@ class AddForm extends React.Component {
 
   validateState = () => {
     const { name, price, sizes, imageUrls, types } = this.getPizzaState();
-    if (!name || !price || !sizes.length || !imageUrls.length || !types.length) {
+    if (
+      !name ||
+      !price ||
+      !sizes.length ||
+      !imageUrls.length ||
+      !types.length
+    ) {
       return false;
     }
     return true;
@@ -108,7 +130,7 @@ class AddForm extends React.Component {
   savePizza = (e) => {
     e.preventDefault();
     if (this.validateState()) {
-      this.props.dispatch(addNewPizza(this.getPizzaState()));
+      this.props.dispatch(updatePizza(this.getPizzaState()));
     } else {
       alert("НЕ ВСЕ ПОЛЯ ЗАПОЛНЕНЫ!");
     }
@@ -165,7 +187,7 @@ class AddForm extends React.Component {
                 ) : (
                   <FormControl
                     placeholder="URL изображения"
-                    value=""
+                    value={this.state.images[el]}
                     disabled
                   />
                 )}
@@ -178,6 +200,7 @@ class AddForm extends React.Component {
             <div>
               <Form.Check
                 inline
+                checked={this.state.types.includes(0)}
                 label="Тонкое"
                 value="0"
                 type="checkbox"
@@ -185,6 +208,7 @@ class AddForm extends React.Component {
               />
               <Form.Check
                 inline
+                checked={this.state.types.includes(1)}
                 label="Традиционное"
                 value="1"
                 type="checkbox"
@@ -204,5 +228,4 @@ class AddForm extends React.Component {
     );
   }
 }
-
-export default AddForm;
+export default EditPizzaForm;

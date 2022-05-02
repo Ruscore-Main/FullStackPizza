@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 function BasketFull (props) {
 
   const {items, totalPrice, totalCount} = useSelector(state => state.cart);
-
   const dispatch = useDispatch(); 
   const clearBasket = () => {
     dispatch(clearCart())
@@ -107,7 +106,7 @@ function BasketFull (props) {
 
             return [
             s26tr.length ? <BasketItem pizza={s26tr[0]} name={name} imageUrl={s26tr[0].imageUrl} price={s26tr.reduce((sum, el)=>sum+el.price, 0)} count={s26tr.length} size={26} type='традиционное'/> : '',
-            s30tr.length ? <BasketItem pizza={s30tr[0]} name={name} imageUrl={s30tr[0].imageUrl} price={s30tr.r0educe((sum, el)=>sum+el.price, 0)} count={s30tr.length} size={30} type='традиционное'/> : '',
+            s30tr.length ? <BasketItem pizza={s30tr[0]} name={name} imageUrl={s30tr[0].imageUrl} price={s30tr.reduce((sum, el)=>sum+el.price, 0)} count={s30tr.length} size={30} type='традиционное'/> : '',
             s40tr.length ? <BasketItem pizza={s40tr[0]} name={name} imageUrl={s40tr[0].imageUrl} price={s40tr.reduce((sum, el)=>sum+el.price, 0)} count={s40tr.length} size={40} type='традиционное'/> : '',
             
             s26tk.length ? <BasketItem pizza={s26tk[0]} name={name} imageUrl={s26tk[0].imageUrl} price={s26tk.reduce((sum, el)=>sum+el.price, 0)} count={s26tk.length} size={26} type='тонкое'/> : '',

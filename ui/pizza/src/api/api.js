@@ -17,6 +17,16 @@ export const pizzasAPI = {
   },
 
   addNewPizza(pizza) {
-    return instance.post(pizza)
+    return instance.post('', pizza)
+  },
+
+  deletePizza(id) {
+    return instance.delete(`/${id}`)
+  },
+
+  updatePizza(pizza) {
+    console.log(pizza);
+    return instance.put(`/${pizza.id}`, pizza)
   }
+
 };
