@@ -184,6 +184,25 @@ namespace PizzaProject.Controllers
             foundPizza.Rating = pizza.rating;
             foundPizza.Category = pizza.category;
 
+
+            List<PizzaImage> images = await _db.PizzaImages.ToListAsync();
+
+            // Удаляем все связанные изображения
+            foundPizza.Images.Clear();
+
+            // Создаем новые связанные изображения
+            for (int i = 0; i < pizza.imageUrls.Count; i++)
+            {
+                PizzaImage pizzaImage = new PizzaImage()
+                {
+                    ImageUrl = pizza.imageUrls[i],
+                    Size = pizza.sizes[i],
+                };
+
+                foundPizza.Images.Add(pizzaImage);
+            }
+
+
             await _db.SaveChangesAsync();
             return Ok(pizza);
         }
