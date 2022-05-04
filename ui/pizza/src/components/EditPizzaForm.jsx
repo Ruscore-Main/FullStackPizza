@@ -67,6 +67,7 @@ class EditPizzaForm extends React.Component {
     });
   };
 
+  // Обновление types в state
   onTypeChange = (e) => {
     const value = +e.target.value;
     this.setState((prev) => {
@@ -81,6 +82,7 @@ class EditPizzaForm extends React.Component {
     });
   };
 
+  // Обновление изображения в state
   onImageUrlsChange = (e, size) => {
     this.setState((prev) => ({
       images: {
@@ -90,6 +92,8 @@ class EditPizzaForm extends React.Component {
     }));
   };
 
+
+  // Получение отформатированного state
   getPizzaState = () => {
     let { name, price, rating, types, images, id } = this.state;
     let previewState = {
@@ -113,6 +117,8 @@ class EditPizzaForm extends React.Component {
     return previewState;
   };
 
+
+  // Валидация для unit-тестов
   validateState = () => {
     const { name, price, sizes, imageUrls, types } = this.getPizzaState();
     if (
@@ -127,6 +133,7 @@ class EditPizzaForm extends React.Component {
     return true;
   };
 
+  // put запрос на обновление товара
   savePizza = (e) => {
     e.preventDefault();
     if (this.validateState()) {
