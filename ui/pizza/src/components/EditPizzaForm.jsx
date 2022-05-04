@@ -12,13 +12,14 @@ class EditPizzaForm extends React.Component {
   constructor(props) {
     super(props);
 
-    const { id, name, rating, imageUrls, sizes, types, price } = props.pizza;
+    const { id, name, rating, imageUrls, sizes, types, price, category } = props.pizza;
 
     this.state = {
       id,
       name,
       rating,
       types,
+      category,
       price,
 
       images: {
@@ -92,16 +93,20 @@ class EditPizzaForm extends React.Component {
     }));
   };
 
+  onCategorChange = e => {
+    this.setState({category: parseInt(e.target.value)});
+  }
 
   // Получение отформатированного state
   getPizzaState = () => {
-    let { name, price, rating, types, images, id } = this.state;
+    let { id, name, price, rating, types, images, category } = this.state;
     let previewState = {
       id,
       name,
       price,
       rating,
       types,
+      category,
       imageUrls: [],
       sizes: [],
     };
@@ -120,7 +125,7 @@ class EditPizzaForm extends React.Component {
 
   // Валидация для unit-тестов
   validateState = () => {
-    const { name, price, sizes, imageUrls, types } = this.getPizzaState();
+    const { id, name, price, sizes, imageUrls, types } = this.getPizzaState();
     if (
       !name ||
       !price ||
@@ -200,6 +205,17 @@ class EditPizzaForm extends React.Component {
                 )}
               </InputGroup>
             ))}
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Категория</Form.Label>
+            <Form.Select aria-label="Default select example" value={this.state.category} onChange={this.onCategorChange}>
+              <option value="0">Мясные</option>
+              <option value="1">Вегетарианская</option>
+              <option value="2">Гриль</option>
+              <option value="3">Острые</option>
+              <option value="4">Закрытые</option>
+          </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">

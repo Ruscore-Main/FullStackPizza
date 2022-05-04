@@ -1,21 +1,22 @@
-import React from "react";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import Button from "react-bootstrap/Button";
-import FormControl from "react-bootstrap/FormControl";
-import PizzaCard from "./PizzaCard";
-import { Button as SaveButton } from "../components";
-import { addNewPizza } from "../redux/actions/pizzas";
+import React from 'react';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
+import FormControl from 'react-bootstrap/FormControl';
+import PizzaCard from './PizzaCard';
+import { Button as SaveButton } from '../components';
+import { addNewPizza } from '../redux/actions/pizzas';
 
 class AddForm extends React.Component {
   state = {
-    name: "",
-    price: "",
+    name: '',
+    price: '',
     rating: 5,
+    category: 0,
     images: {
-      26: "",
-      30: "",
-      40: "",
+      26: '',
+      30: '',
+      40: '',
     },
     types: [],
 
@@ -46,7 +47,7 @@ class AddForm extends React.Component {
     this.setState((prev) => {
       let hasSize = prev[key];
       if (hasSize) {
-        return { [key]: !hasSize, images: { ...prev.images, [size]: "" } };
+        return { [key]: !hasSize, images: { ...prev.images, [size]: '' } };
       }
       return { [key]: !hasSize };
     });
@@ -75,13 +76,18 @@ class AddForm extends React.Component {
     }));
   };
 
+  onCategorChange = e => {
+    this.setState({category: parseInt(e.target.value)});
+  }
+
   getPizzaState = () => {
-    let { name, price, rating, types, images } = this.state;
+    let { name, price, rating, types, images, category } = this.state;
     let previewState = {
       name,
       price,
       rating,
       types,
+      category,
       imageUrls: [],
       sizes: [],
     };
@@ -89,7 +95,7 @@ class AddForm extends React.Component {
     for (let keyValues of Object.entries(images)) {
       const [key, value] = keyValues;
 
-      if (value != "") {
+      if (value != '') {
         previewState.sizes.push(+key);
         previewState.imageUrls.push(value);
       }
@@ -110,7 +116,7 @@ class AddForm extends React.Component {
     if (this.validateState()) {
       this.props.dispatch(addNewPizza(this.getPizzaState()));
     } else {
-      alert("НЕ ВСЕ ПОЛЯ ЗАПОЛНЕНЫ!");
+      alert('НЕ ВСЕ ПОЛЯ ЗАПОЛНЕНЫ!');
     }
   };
 
@@ -138,22 +144,14 @@ class AddForm extends React.Component {
 
           <Form.Group className="mb-3">
             <Form.Label>Рейтинг: {this.state.rating}</Form.Label>
-            <Form.Range
-              min={1}
-              max={10}
-              value={this.state.rating}
-              onChange={this.onRatingChange}
-            />
+            <Form.Range min={1} max={10} value={this.state.rating} onChange={this.onRatingChange} />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Размер</Form.Label>
             {[26, 30, 40].map((el, i) => (
               <InputGroup className="mb-3">
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => this.haveImageBtnClick(el)}
-                >
+                <Button variant="outline-secondary" onClick={() => this.haveImageBtnClick(el)}>
                   {el} см.
                 </Button>
                 {this.state[`have${el}`] ? (
@@ -163,14 +161,22 @@ class AddForm extends React.Component {
                     onChange={(e) => this.onImageUrlsChange(e, el)}
                   />
                 ) : (
-                  <FormControl
-                    placeholder="URL изображения"
-                    value=""
-                    disabled
-                  />
+                  <FormControl placeholder="URL изображения" value="" disabled />
                 )}
               </InputGroup>
             ))}
+          </Form.Group>
+
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Категория</Form.Label>
+            <Form.Select aria-label="Default select example" value={this.state.category} onChange={this.onCategorChange}>
+              <option value="0">Мясные</option>
+              <option value="1">Вегетарианская</option>
+              <option value="2">Гриль</option>
+              <option value="3">Острые</option>
+              <option value="4">Закрытые</option>
+          </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">

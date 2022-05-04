@@ -53,7 +53,7 @@ const TablePizza = ({items = [], dispatch}) => {
         backdrop="static"
         keyboard={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Изменениеgit товара</Modal.Title>
+          <Modal.Title>Изменение товара</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
