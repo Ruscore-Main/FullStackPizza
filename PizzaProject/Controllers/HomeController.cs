@@ -41,76 +41,83 @@ namespace PizzaProject.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JsonResult>>> Get(string category, string _sort)
         {
-            List<PizzaJson> pizzas = new List<PizzaJson>();
-            List<PizzaImage> images = await _db.PizzaImages.ToListAsync();
-            List<Models.Type> allTypes = await _db.Types.ToListAsync();
-            List<Pizza_Type> pts = await _db.Pizza_Types.ToListAsync();
-            await _db.Pizzas.ForEachAsync(pizza =>
+            try
             {
-                PizzaJson curPizza = new PizzaJson();
-                curPizza.id = pizza.Id;
-                curPizza.name = pizza.Name;
-                curPizza.price = pizza.Price;
-                curPizza.category = pizza.Category;
-                curPizza.rating = pizza.Rating;
-
-                foreach (Pizza_Type pt in pts)
+                List<PizzaJson> pizzas = new List<PizzaJson>();
+                List<PizzaImage> images = await _db.PizzaImages.ToListAsync();
+                List<Models.Type> allTypes = await _db.Types.ToListAsync();
+                List<Pizza_Type> pts = await _db.Pizza_Types.ToListAsync();
+                await _db.Pizzas.ForEachAsync(pizza =>
                 {
-                    if (pt.PizzaId == pizza.Id)
+                    PizzaJson curPizza = new PizzaJson();
+                    curPizza.id = pizza.Id;
+                    curPizza.name = pizza.Name;
+                    curPizza.price = pizza.Price;
+                    curPizza.category = pizza.Category;
+                    curPizza.rating = pizza.Rating;
+
+                    foreach (Pizza_Type pt in pts)
                     {
-                        curPizza.types.Add(pt.Type.TypeValue);
+                        if (pt.PizzaId == pizza.Id)
+                        {
+                            curPizza.types.Add(pt.Type.TypeValue);
+                        }
+                    }
+                    foreach (PizzaImage img in images)
+                    {
+                        if (img.PizzaId == pizza.Id)
+                        {
+                            curPizza.imageUrls.Add(img.ImageUrl);
+                            curPizza.sizes.Add(img.Size);
+                        }
+                    }
+                    pizzas.Add(curPizza);
+                });
+
+                // Если нет никаких параметров запроса, то сразу возвращаем результат, чтобы ускорить процесс
+                if (category == null && _sort == null)
+                {
+                    return new JsonResult(pizzas);
+                }
+
+                var result = from s in pizzas select s;
+
+                if (category != null)
+                {
+                    result = result.Where(el => Convert.ToString(el.category) == category);
+
+                }
+
+                if (_sort != null)
+                {
+                    switch (_sort)
+                    {
+                        case "popular":
+                            {
+                                result = result.OrderBy(el => el.rating);
+                                break;
+                            }
+
+                        case "price":
+                            {
+                                result = result.OrderBy(el => el.price);
+                                break;
+                            }
+                        case "name":
+                            {
+                                result = result.OrderBy(el => el.name);
+                                break;
+                            }
                     }
                 }
-                foreach (PizzaImage img in images)
-                {
-                    if (img.PizzaId == pizza.Id)
-                    {
-                        curPizza.imageUrls.Add(img.ImageUrl);
-                        curPizza.sizes.Add(img.Size);
-                    }
-                }
-                pizzas.Add(curPizza);
-            });
 
-            // Если нет никаких параметров запроса, то сразу возвращаем результат, чтобы ускорить процесс
-            if (category == null && _sort == null)
-            {
-                return new JsonResult(pizzas);
+
+                return new JsonResult(result);
             }
-
-            var result = from s in pizzas select s;
-
-            if (category != null)
+            catch
             {
-                result = result.Where(el => Convert.ToString(el.category) == category);
-
+                return BadRequest();
             }
-
-            if (_sort != null)
-            {
-                switch (_sort)
-                {
-                    case "popular":
-                        {
-                            result = result.OrderBy(el => el.rating);
-                            break;
-                        }
-
-                    case "price":
-                        {
-                            result = result.OrderBy(el => el.price);
-                            break;
-                        }
-                    case "name":
-                        {
-                            result = result.OrderBy(el => el.name);
-                            break;
-                        }
-                }
-            }
-
-
-            return new JsonResult(result);
         }
 
         // POST api/pizza
@@ -211,8 +218,12 @@ namespace PizzaProject.Controllers
         // DELETE api/pizza
         // Удаление товара
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Pizza>> Delete(int id)
+        public async Task<ActionResult<Pizza>> Delete(int? id)
         {
+            if (id == null)
+            {
+                return BadRequest();
+            }
             Pizza pizza = _db.Pizzas.FirstOrDefault(el => el.Id == id);
 
             if (pizza == null)

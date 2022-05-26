@@ -9,6 +9,20 @@ body {
   padding: 50px 0;
 }
 
+.adminLink {
+  background-color: #fff;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  border: 2px solid $orange;
+  border-radius: 10px;
+  right: 15px;
+  bottom: 15px;
+}
+
 .wrapper {
   width: calc(100vw - 100px);
   height: 100%;
@@ -31,7 +45,7 @@ body {
     justify-content: space-around;
   }
 
-  
+
 
   &__top {
     display: flex;
@@ -47,6 +61,7 @@ body {
   &--cart {
     max-width: 820px;
     margin: 20px auto;
+
     .content__title {
       margin: 0;
     }
@@ -71,6 +86,7 @@ body {
       width: 30px;
       height: 30px;
       margin-right: 10px;
+
       path {
         stroke: $black;
         stroke-width: 1.9;
@@ -103,13 +119,14 @@ body {
           stroke: darken($color: #b6b6b6, $amount: 50);
         }
       }
+
       span {
         color: darken($color: #b6b6b6, $amount: 50);
       }
     }
   }
 
-  
+
 
   &__item {
     display: flex;
@@ -205,6 +222,7 @@ body {
           height: 11.5px;
           position: relative;
         }
+
         &:hover,
         &:active {
           border-color: darken($color: $gray-line, $amount: 80);
@@ -262,6 +280,7 @@ body {
 
         svg {
           margin-right: 12px;
+
           path {
             fill: transparent;
             stroke-width: 2;

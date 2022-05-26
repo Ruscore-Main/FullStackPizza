@@ -145,7 +145,7 @@ class EditPizzaForm extends React.Component {
 
   render() {
     return (
-      <>
+      <div className="container">
         <Form onSubmit={this.savePizza}>
           <Form.Group className="mb-3">
             <Form.Label>Название</Form.Label>
@@ -231,7 +231,7 @@ class EditPizzaForm extends React.Component {
           <h2 className="mb-3">Превью</h2>
           <PizzaCard {...this.getPizzaState()} isPreview />
         </div>
-      </>
+      </div>
     );
   }
 }
