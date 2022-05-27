@@ -7,7 +7,7 @@ namespace PizzaProject
 {
     public static class Validate
     {
-        public static string CreateValidatoin(string name, int price, int category, int rating)
+        public static string CreateValidatoin(string name = "", int price = 0, int category = 0, int rating = 0, List<int> sizes = null, List<int> types = null, List<string> imageUrls = null)
         {
             if (name.Length < 2)
             {
@@ -33,6 +33,36 @@ namespace PizzaProject
             {
                 return "Рейтинг не может быть больше 10";
             }
+
+            if (sizes.Count == 0)
+            {
+                return "У товара должны быть указаны размеры!";
+            }
+            else
+            {
+                if (!(sizes.Contains(26) || sizes.Contains(30) || sizes.Contains(40))) {
+                    return "Задан несуществующий размер!";
+                }
+                
+            }
+
+            if (types.Count == 0)
+            {
+                return "У товара должны быть указаны типы!";
+            }
+            else
+            {
+                if (!(types.Contains(0) || types.Contains(1)))
+                {
+                    return "Задан несуществующий тип!";
+                }
+            }
+
+            if (imageUrls.Count == 0)
+            {
+                return "У товара должно быть хотя бы одно изображение!";
+            }
+
 
             return "Успешно";
         }

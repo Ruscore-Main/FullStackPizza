@@ -130,6 +130,11 @@ namespace PizzaProject.Controllers
                 return BadRequest();
             }
 
+            if (Validate.CreateValidatoin(pizza.name, pizza.price, pizza.category, pizza.rating, pizza.sizes, pizza.types, pizza.imageUrls) != "Успешно")
+            {
+                return BadRequest();
+            }
+
             List<Models.Type> allTypes = await _db.Types.ToListAsync();
 
             Pizza newPizza = new Pizza();
@@ -179,6 +184,11 @@ namespace PizzaProject.Controllers
                 return BadRequest();
             }
 
+            if (Validate.CreateValidatoin(pizza.name, pizza.price, pizza.category, pizza.rating, pizza.sizes, pizza.types, pizza.imageUrls) != "Успешно")
+            {
+                return BadRequest();
+            } 
+
             Pizza foundPizza = await _db.Pizzas.FirstOrDefaultAsync(el => el.Id == pizza.id);
 
             if (foundPizza == null)
@@ -218,22 +228,25 @@ namespace PizzaProject.Controllers
         // DELETE api/pizza
         // Удаление товара
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Pizza>> Delete(int? id)
+        public async Task<ActionResult<Pizza>> Delete(int id)
         {
-            if (id == null)
+            try
+            {
+                Pizza pizza = _db.Pizzas.FirstOrDefault(el => el.Id == id);
+
+                if (pizza == null)
+                {
+                    return NotFound();
+                }
+
+                _db.Pizzas.Remove(pizza);
+                await _db.SaveChangesAsync();
+                return Ok(pizza);
+            }
+            catch
             {
                 return BadRequest();
             }
-            Pizza pizza = _db.Pizzas.FirstOrDefault(el => el.Id == id);
-
-            if (pizza == null)
-            {
-                return NotFound();
-            }
-
-            _db.Pizzas.Remove(pizza);
-            await _db.SaveChangesAsync();
-            return Ok(pizza);
         }
 
 
